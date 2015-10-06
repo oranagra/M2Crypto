@@ -80,7 +80,19 @@ class _M2CryptoBuildExt(build_ext.build_ext):
 
         # Fedora does hat tricks.
         if os.path.isfile('/etc/redhat-release'):
-            if platform.architecture()[0] == '64bit':
+            if platform.machine() == 'ppc64':
+                self.swig_opts.append('-D__powerpc64__')
+                self.swig_opts.append('-D__BYTE_ORDER__=4321')
+                self.swig_opts.append('-D__LITTLE_ENDIAN__=4321')
+                self.swig_opts.append('-D__WORDSIZE=64')
+                self.swig_opts.append('-D_CALL_ELF=2')
+            elif platform.machine() == 'ppc64le':
+                self.swig_opts.append('-D__powerpc64__')
+                self.swig_opts.append('-D__BYTE_ORDER__=1234')
+                self.swig_opts.append('-D__LITTLE_ENDIAN__=1234')
+                self.swig_opts.append('-D__WORDSIZE=64')
+                self.swig_opts.append('-D_CALL_ELF=2')
+            elif platform.architecture()[0] == '64bit':
                 self.swig_opts.append('-D__x86_64__')
             elif platform.architecture()[0] == '32bit':
                 self.swig_opts.append('-D__i386__')
